@@ -15,16 +15,19 @@ const isSender = !location.pathname.includes('/download');
 gcmCompliant().catch(err => {
   sendEvent(isSender ? 'sender' : 'recipient', 'unsupported', {
     cd6: err
-  }).then(() => {
-    location.replace('/unsupported/gcm');
-  });
+  })
+  window.location.replace('/unsupported/gcm');
 });
 
 if (navigator.userAgent.toLowerCase().indexOf('firefox') > -1 &&
     parseInt(navigator.userAgent.toLowerCase().match(/firefox\/*([^\n\r]*)\./)[1]) <= 49) {
-    sendEvent(isSender ? 'sender' : 'recipient', 'unsupported', {
-      cd6: new Error('Firefox is outdated.')
-    }).then(() => {
-      location.replace('/unsupported/outdated');
-    });
+  sendEvent(isSender ? 'sender' : 'recipient', 'unsupported', {
+    cd6: new Error('Firefox is outdated.')
+  })
+  location.replace('/unsupported/outdated');
+}
+
+if (navigator.userAgent.toLowerCase().indexOf('msie') > -1 ||
+    navigator.userAgent.toLowerCase().match(/trident\/7\./)) {
+  window.location.replace('/unsupported/ie');
 }
